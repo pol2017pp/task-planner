@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+
+export default function PlannerDashboard() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  const addTask = () => {
+    if (newTask.trim() === "") return;
+    setTasks([...tasks, { name: newTask, done: false }]);
+    setNewTask("");
+  };
+
+  const toggleTask = (index) => {
+    const updated = [...tasks];
+    updated[index].done = !updated[index].done;
+    setTasks(updated);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-4xl mx-auto grid gap-6">
+        <motion.h1
+          className="text-3xl font-bold text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          📅 Мій Планувальник
+        </motion.h1>
+
+        {/* Дашборд */}
+        <Card className="shadow-md">
+          <CardContent className="p-4 grid grid-cols-2 gap-4">
+            <div>
+              <h2 className="font-semibold text-lg">📆 Сьогодні: {new Date().toLocaleDateString("uk-UA")}</h2>
+              <p>Завдань: {tasks.length}</p>
+              <p>Виконано: {tasks.filter((t) => t.done).length}</p>
+            </div>
+            <div>
+              <h2 className="font-semibold text-lg">💱 Курси валют (приклад)</h2>
+              <p>USD → UAH: 39.50</p>
+              <p>EUR → UAH: 42.20</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Додати задачу */}
+        <Card className="shadow-md">
+          <CardContent className="p-4 space-y-4">
+            <h2 className="text-xl font-semibold">➕ Додати нову задачу</h2>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Наприклад: Написати звіт"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+              />
+              <Button onClick={addTask}>Додати</Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Список задач */}
+        <Card className="shadow-md">
+          <CardContent className="p-4 space-y-2">
+            <h2 className="text-xl font-semibold">📋 Завдання</h2>
+            {tasks.length === 0 ? (
+              <p className="text-gray-500">Завдань ще немає</p>
+            ) : (
+              tasks.map((task, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center border-b py-2"
+                >
+                  <span
+                    className={`text-sm ${task.done ? "line-through text-gray-400" : ""}`}
+                  >
+                    {task.name}
+                  </span>
+                  <Button size="sm" onClick={() => toggleTask(index)}>
+                    {task.done ? "↩️ Відновити" : "✅ Виконано"}
+                  </Button>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
