@@ -2,108 +2,27 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Авторизація</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TaskBoard | Авторизація</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="container">
-    <div id="login-form">
-      <h2>Увійти</h2>
-      <input type="text" id="username" placeholder="Логін" />
-      <input type="password" id="password" placeholder="Пароль" />
-      <button onclick="login()">Увійти</button>
-      <p id="error-message"></p>
-    </div>
+  <div class="login-container" id="login-form">
+    <h2>Вхід</h2>
+    <input type="text" id="username" placeholder="Логін" />
+    <input type="password" id="password" placeholder="Пароль" />
+    <button onclick="login()">Увійти</button>
+  </div>
 
-    <div id="dashboard" class="hidden">
-      <h2>Вітаємо, <span id="user-name"></span>!</h2>
-	  <div class="container">
-        <h1>Вітаємо, admin!</h1>
-        <div class="section">
-            <h2>💱 Курси валют до UAH</h2>
-            <ul>
-                <li>USD: <span id="usd-uah">...</span></li>
-                <li>EUR: <span id="eur-uah">...</span></li>
-                <li>USDT: <span id="usdt-uah">...</span></li>
-            </ul>
-        </div>
-        <div class="section">
-            <h2>📈 Курси криптовалют до USD</h2>
-            <ul>
-                <li>BTC: <span id="btc-usd">...</span></li>
-                <li>ETH: <span id="eth-usd">...</span></li>
-                <li>SOL: <span id="sol-usd">...</span></li>
-            </ul>
-        </div>
-    </div>
-      <button onclick="logout()">Вийти</button>
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <h1>Вітаємо, <span id="user-name">admin</span>!</h1>
+    <div class="cards">
+      <div class="card" id="date"></div>
+      <div class="card" id="currency"></div>
+      <div class="card" id="crypto"></div>
     </div>
   </div>
 
-  <script>
-    const VALID_USERNAME = "admin";
-    const VALID_PASSWORD = "1234";
-
-    function login() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        localStorage.setItem("loggedIn", true);
-        localStorage.setItem("username", username);
-        showDashboard();
-      } else {
-        document.getElementById("error-message").textContent = "Невірний логін або пароль.";
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      localStorage.removeItem("username");
-      location.reload();
-    }
-
-    function showDashboard() {
-      const username = localStorage.getItem("username");
-      document.getElementById("user-name").textContent = username;
-      document.getElementById("login-form").classList.add("hidden");
-      document.getElementById("dashboard").classList.remove("hidden");
-    }
-
-    window.onload = function () {
-      if (localStorage.getItem("loggedIn")) {
-        showDashboard();
-      }
-    };
-  </script>
-  <script>
-        async function fetchRates() {
-            const fiatUrl = 'https://api.exchangerate.host/latest?base=USD&symbols=UAH,EUR';
-            const cryptoUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=usd,uah';
-
-            try {
-                const fiatRes = await fetch(fiatUrl);
-                const fiatData = await fiatRes.json();
-                const usdToUah = fiatData.rates.UAH.toFixed(2);
-                const eurToUah = (fiatData.rates.UAH / fiatData.rates.EUR).toFixed(2);
-
-                const cryptoRes = await fetch(cryptoUrl);
-                const cryptoData = await cryptoRes.json();
-
-                document.getElementById("usd-uah").innerText = usdToUah;
-                document.getElementById("eur-uah").innerText = eurToUah;
-                document.getElementById("usdt-uah").innerText = cryptoData.tether.uah.toFixed(2);
-
-                document.getElementById("btc-usd").innerText = cryptoData.bitcoin.usd.toFixed(2);
-                document.getElementById("eth-usd").innerText = cryptoData.ethereum.usd.toFixed(2);
-                document.getElementById("sol-usd").innerText = cryptoData.solana.usd.toFixed(2);
-            } catch (error) {
-                console.error("Помилка завантаження курсів:", error);
-            }
-        }
-
-        window.onload = fetchRates;
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
