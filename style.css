@@ -1,47 +1,51 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f6f8;
-    margin: 0;
-    padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f6fa;
+  color: #2f3640;
 }
 
-.container {
-    max-width: 700px;
-    margin: 40px auto;
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+.login-container {
+  max-width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  border-radius: 8px;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
-    font-size: 26px;
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
 }
 
-.section {
-    margin-top: 30px;
+.login-container button {
+  padding: 10px 20px;
+  background: #0984e3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-.section h2 {
-    font-size: 20px;
-    color: #444;
-    margin-bottom: 10px;
+.dashboard {
+  padding: 40px;
 }
 
-.section ul {
-    list-style: none;
-    padding: 0;
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.section li {
-    background: #f0f3f7;
-    margin: 6px 0;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    color: #222;
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  min-width: 250px;
+  flex: 1;
 }
