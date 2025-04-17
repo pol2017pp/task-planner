@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -7,72 +8,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Форма для авторизації -->
-    <div id="login-form">
-        <h2>Вхід</h2>
-        <input type="text" id="username" placeholder="Логін">
-        <input type="password" id="password" placeholder="Пароль">
-        <button onclick="authorize()">Увійти</button>
-    </div>
-
-    <!-- Дашборд -->
-    <div id="dashboard" style="display:none;">
-        <h1>Добрий день, адміністраторе!</h1>
-        <div>
-            <h2>Сьогоднішні задачі</h2>
-            <ul id="tasks-list">
-                <!-- Завдання будуть додаватися тут через JS -->
-            </ul>
+    <div class="container">
+        <div class="login-screen" id="login-screen">
+            <h2>Увійти</h2>
+            <input type="text" id="username" placeholder="Ваше ім’я">
+            <button onclick="login()">Увійти</button>
         </div>
-        <div>
-            <h2>Статистика</h2>
-            <ul>
-                <li>Завдань на сьогодні: <span id="today-tasks-count">0</span></li>
-                <li>Курс USD: <span id="usd-rate">0</span></li>
-                <li>Курс EUR: <span id="eur-rate">0</span></li>
-            </ul>
+
+        <div class="dashboard hidden" id="dashboard">
+            <h1>Вітаємо, <span id="user-name"></span>!</h1>
+            <div class="block">
+                <h2>Сьогоднішні задачі</h2>
+                <ul id="task-list">
+                    <li>🔹 Завершити оновлення сайту</li>
+                    <li>🔹 Перевірити електронну пошту</li>
+                </ul>
+            </div>
+            <div class="block">
+                <h2>Курс валют</h2>
+                <p>💵 USD: 39.1 грн</p>
+                <p>💶 EUR: 41.7 грн</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // Функція для авторизації
-        function authorize() {
+        function login() {
             const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const storedUsername = "admin";  // Ім'я користувача для авторизації
-            const storedPassword = "yarik1995";  // Пароль для авторизації
-
-            // Перевірка на правильність логіну та пароля
-            if (username === storedUsername && password === storedPassword) {
-                document.getElementById("login-form").style.display = "none";  // Приховуємо форму авторизації
-                document.getElementById("dashboard").style.display = "block";  // Показуємо дашборд
-
-                // Додаємо завдання на сьогодні
-                const tasks = [
-                    "Завдання 1: Підготовка звіту",
-                    "Завдання 2: Перевірка електронної пошти",
-                    "Завдання 3: Підготовка презентації"
-                ];
-
-                const tasksList = document.getElementById("tasks-list");
-                tasks.forEach(task => {
-                    let li = document.createElement("li");
-                    li.textContent = task;
-                    tasksList.appendChild(li);
-                });
-
-                // Отримуємо курс валют
-                fetch('https://api.exchangerate-api.com/v4/latest/USD')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById("usd-rate").textContent = data.rates.UAH;
-                        document.getElementById("eur-rate").textContent = data.rates.UAH;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching currency data:', error);
-                    });
-            } else {
-                alert("Невірний логін або пароль");
+            if (username.trim() !== "") {
+                document.getElementById("login-screen").classList.add("hidden");
+                document.getElementById("dashboard").classList.remove("hidden");
+                document.getElementById("user-name").innerText = username;
             }
         }
     </script>
