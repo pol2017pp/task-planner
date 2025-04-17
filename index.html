@@ -1,55 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Планувальник</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Авторизація</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container" id="login-screen">
-    <h1>Вхід</h1>
-    <input type="text" id="username" placeholder="Ваше ім’я" />
-    <button onclick="login()">Увійти</button>
-  </div>
-
-  <div class="container hidden" id="dashboard">
-    <h1>Привіт, <span id="user-display"></span>!</h1>
-    <div class="section">
-      <h2>📅 Сьогоднішні завдання</h2>
-      <ul id="task-list">
-        <li>Задача 1</li>
-        <li>Задача 2</li>
-      </ul>
+  <div class="container">
+    <div id="login-form">
+      <h2>Увійти</h2>
+      <input type="text" id="username" placeholder="Логін" />
+      <input type="password" id="password" placeholder="Пароль" />
+      <button onclick="login()">Увійти</button>
+      <p id="error-message"></p>
     </div>
-    <div class="section">
-      <h2>📈 Курс валют</h2>
-      <p>USD до UAH: 39.20</p>
-      <p>EUR до UAH: 41.50</p>
+
+    <div id="dashboard" class="hidden">
+      <h2>Вітаємо, <span id="user-name"></span>!</h2>
+      <p>Це ваш дашборд</p>
+      <button onclick="logout()">Вийти</button>
     </div>
   </div>
 
   <script>
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "1234";
+
     function login() {
-      const name = document.getElementById("username").value;
-      if (name.trim() !== "") {
-        localStorage.setItem("user", name);
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        localStorage.setItem("loggedIn", true);
+        localStorage.setItem("username", username);
         showDashboard();
+      } else {
+        document.getElementById("error-message").textContent = "Невірний логін або пароль.";
       }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("username");
+      location.reload();
     }
 
     function showDashboard() {
-      const user = localStorage.getItem("user");
-      if (user) {
-        document.getElementById("user-display").innerText = user;
-        document.getElementById("login-screen").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-      }
+      const username = localStorage.getItem("username");
+      document.getElementById("user-name").textContent = username;
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
     }
 
     window.onload = function () {
-      showDashboard();
+      if (localStorage.getItem("loggedIn")) {
+        showDashboard();
+      }
     };
   </script>
 </body>
