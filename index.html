@@ -2,45 +2,55 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Планувальник</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Планувальник</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <div class="container">
-        <div class="login-screen" id="login-screen">
-            <h2>Увійти</h2>
-            <input type="text" id="username" placeholder="Ваше ім’я">
-            <button onclick="login()">Увійти</button>
-        </div>
+  <div class="container" id="login-screen">
+    <h1>Вхід</h1>
+    <input type="text" id="username" placeholder="Ваше ім’я" />
+    <button onclick="login()">Увійти</button>
+  </div>
 
-        <div class="dashboard hidden" id="dashboard">
-            <h1>Вітаємо, <span id="user-name"></span>!</h1>
-            <div class="block">
-                <h2>Сьогоднішні задачі</h2>
-                <ul id="task-list">
-                    <li>🔹 Завершити оновлення сайту</li>
-                    <li>🔹 Перевірити електронну пошту</li>
-                </ul>
-            </div>
-            <div class="block">
-                <h2>Курс валют</h2>
-                <p>💵 USD: 39.1 грн</p>
-                <p>💶 EUR: 41.7 грн</p>
-            </div>
-        </div>
+  <div class="container hidden" id="dashboard">
+    <h1>Привіт, <span id="user-display"></span>!</h1>
+    <div class="section">
+      <h2>📅 Сьогоднішні завдання</h2>
+      <ul id="task-list">
+        <li>Задача 1</li>
+        <li>Задача 2</li>
+      </ul>
     </div>
+    <div class="section">
+      <h2>📈 Курс валют</h2>
+      <p>USD до UAH: 39.20</p>
+      <p>EUR до UAH: 41.50</p>
+    </div>
+  </div>
 
-    <script>
-        function login() {
-            const username = document.getElementById("username").value;
-            if (username.trim() !== "") {
-                document.getElementById("login-screen").classList.add("hidden");
-                document.getElementById("dashboard").classList.remove("hidden");
-                document.getElementById("user-name").innerText = username;
-            }
-        }
-    </script>
+  <script>
+    function login() {
+      const name = document.getElementById("username").value;
+      if (name.trim() !== "") {
+        localStorage.setItem("user", name);
+        showDashboard();
+      }
+    }
+
+    function showDashboard() {
+      const user = localStorage.getItem("user");
+      if (user) {
+        document.getElementById("user-display").innerText = user;
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+      }
+    }
+
+    window.onload = function () {
+      showDashboard();
+    };
+  </script>
 </body>
 </html>
