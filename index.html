@@ -1,79 +1,74 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мій Планувальник</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планувальник</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="login-wrapper" id="login-wrapper">
-    <div class="login-box">
-      <h2>Авторизація</h2>
-      <input type="text" id="username" placeholder="Ім'я користувача">
-      <input type="password" id="password" placeholder="Пароль">
-      <button onclick="login()">Увійти</button>
-      <p id="login-error" class="error"></p>
+
+    <!-- Форма для авторизації -->
+    <div class="login-wrapper hidden" id="loginForm">
+        <div class="login-box">
+            <h2>Авторизація</h2>
+            <input type="text" id="username" placeholder="Введіть ім'я користувача">
+            <input type="password" id="password" placeholder="Введіть пароль">
+            <button onclick="login()">Увійти</button>
+            <div class="error" id="error"></div>
+        </div>
     </div>
-  </div>
 
-  <div class="dashboard hidden" id="dashboard">
-    <header>
-      <h1>📋 Мій Дашборд</h1>
-      <button onclick="logout()">Вийти</button>
-    </header>
-    <section class="stats">
-      <div class="card">
-        <h3>Сьогодні:</h3>
-        <p id="today-date"></p>
-      </div>
-      <div class="card">
-        <h3>Курс валют (до UAH)</h3>
-        <p>USD: <span id="usd-rate"></span></p>
-        <p>EUR: <span id="eur-rate"></span></p>
-      </div>
-    </section>
-  </div>
+    <!-- Дашборд -->
+    <div id="dashboard" class="dashboard hidden">
+        <header>
+            <h1>Дашборд</h1>
+            <button onclick="logout()">Вихід</button>
+        </header>
 
-  <script>
-    function login() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const error = document.getElementById('login-error');
+        <div class="stats">
+            <div class="card">Задачі на сьогодні: 5</div>
+            <div class="card">Курс USD: 28.5</div>
+            <div class="card">Курс EUR: 33.2</div>
+        </div>
+    </div>
 
-      if (username === 'admin' && password === '1234') {
-        document.getElementById('login-wrapper').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        updateDate();
-        fetchRates();
-      } else {
-        error.textContent = 'Невірне ім’я користувача або пароль';
-      }
-    }
+    <script>
+        // Функція для авторизації
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const storedUsername = "admin";  // Ім'я користувача для авторизації
+            const storedPassword = "password123";  // Пароль для авторизації
 
-    function logout() {
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('login-wrapper').classList.remove('hidden');
-    }
+            if (username === storedUsername && password === storedPassword) {
+                localStorage.setItem("isLoggedIn", true); // Зберігаємо статус входу
+                window.location.reload();  // Перезавантажуємо сторінку для відображення дашборду
+            } else {
+                document.getElementById("error").innerText = "Невірне ім'я користувача або пароль.";
+            }
+        }
 
-    function updateDate() {
-      const today = new Date();
-      const formatted = today.toLocaleDateString('uk-UA', {
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-      });
-      document.getElementById('today-date').textContent = formatted;
-    }
+        // Перевірка чи користувач увійшов
+        function checkLoginStatus() {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                document.getElementById("loginForm").classList.add("hidden");
+                document.getElementById("dashboard").classList.remove("hidden");
+            } else {
+                document.getElementById("loginForm").classList.remove("hidden");
+                document.getElementById("dashboard").classList.add("hidden");
+            }
+        }
 
-    function fetchRates() {
-      fetch('https://api.exchangerate.host/latest?base=USD&symbols=UAH,EUR')
-        .then(response => response.json())
-        .then(data => {
-          const usd = data.rates.UAH.toFixed(2);
-          const eur = (data.rates.UAH / data.rates.EUR).toFixed(2);
-          document.getElementById('usd-rate').textContent = usd;
-          document.getElementById('eur-rate').textContent = eur;
-        });
-    }
-  </script>
+        // Функція для виходу
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.reload();  // Перезавантажуємо сторінку, щоб вивести форму авторизації
+        }
+
+        // Викликаємо перевірку при завантаженні сторінки
+        checkLoginStatus();
+    </script>
+
 </body>
 </html>
