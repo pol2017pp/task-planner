@@ -18,7 +18,25 @@
 
     <div id="dashboard" class="hidden">
       <h2>Вітаємо, <span id="user-name"></span>!</h2>
-      <p>Це ваш дашборд</p>
+	  <div class="container">
+        <h1>Вітаємо, admin!</h1>
+        <div class="section">
+            <h2>💱 Курси валют до UAH</h2>
+            <ul>
+                <li>USD: <span id="usd-uah">...</span></li>
+                <li>EUR: <span id="eur-uah">...</span></li>
+                <li>USDT: <span id="usdt-uah">...</span></li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>📈 Курси криптовалют до USD</h2>
+            <ul>
+                <li>BTC: <span id="btc-usd">...</span></li>
+                <li>ETH: <span id="eth-usd">...</span></li>
+                <li>SOL: <span id="sol-usd">...</span></li>
+            </ul>
+        </div>
+    </div>
       <button onclick="logout()">Вийти</button>
     </div>
   </div>
@@ -59,5 +77,33 @@
       }
     };
   </script>
+  <script>
+        async function fetchRates() {
+            const fiatUrl = 'https://api.exchangerate.host/latest?base=USD&symbols=UAH,EUR';
+            const cryptoUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=usd,uah';
+
+            try {
+                const fiatRes = await fetch(fiatUrl);
+                const fiatData = await fiatRes.json();
+                const usdToUah = fiatData.rates.UAH.toFixed(2);
+                const eurToUah = (fiatData.rates.UAH / fiatData.rates.EUR).toFixed(2);
+
+                const cryptoRes = await fetch(cryptoUrl);
+                const cryptoData = await cryptoRes.json();
+
+                document.getElementById("usd-uah").innerText = usdToUah;
+                document.getElementById("eur-uah").innerText = eurToUah;
+                document.getElementById("usdt-uah").innerText = cryptoData.tether.uah.toFixed(2);
+
+                document.getElementById("btc-usd").innerText = cryptoData.bitcoin.usd.toFixed(2);
+                document.getElementById("eth-usd").innerText = cryptoData.ethereum.usd.toFixed(2);
+                document.getElementById("sol-usd").innerText = cryptoData.solana.usd.toFixed(2);
+            } catch (error) {
+                console.error("Помилка завантаження курсів:", error);
+            }
+        }
+
+        window.onload = fetchRates;
+    </script>
 </body>
 </html>

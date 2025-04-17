@@ -1,52 +1,47 @@
-/* style.css */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  text-align: center;
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 26px;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.section {
+    margin-top: 30px;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
+.section h2 {
+    font-size: 20px;
+    color: #444;
+    margin-bottom: 10px;
 }
 
-button:hover {
-  background-color: #45a049;
+.section ul {
+    list-style: none;
+    padding: 0;
 }
 
-.hidden {
-  display: none;
-}
-
-#error-message {
-  color: red;
-  text-align: center;
+.section li {
+    background: #f0f3f7;
+    margin: 6px 0;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    color: #222;
 }
