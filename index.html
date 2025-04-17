@@ -23,6 +23,50 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+const credentials = { username: "admin", password: "admin123" };
+
+function login() {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+  if (u === credentials.username && p === credentials.password) {
+    localStorage.setItem("auth", "true");
+    showDashboard();
+  } else {
+    alert("Невірні дані!");
+  }
+}
+
+function showDashboard() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("user-name").textContent = credentials.username;
+  document.getElementById("date").textContent = "Сьогоднішня дата: " + new Date().toLocaleDateString("uk-UA");
+  loadRates();
+}
+
+function loadRates() {
+  fetch("https://api.exchangerate.host/latest?base=USD&symbols=UAH,EUR")
+    .then(res => res.json())
+    .then(data => {
+      const usd = data.rates.UAH.toFixed(2);
+      const eur = (data.rates.UAH / data.rates.EUR).toFixed(2);
+      document.getElementById("currency").innerHTML = `<strong>Курс валют:</strong><br>USD: ${usd} UAH<br>EUR: ${eur} UAH`;
+    });
+
+  fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("crypto").innerHTML = `
+        <strong>Криптовалюти:</strong><br>
+        BTC: ${data.bitcoin.usd} USD<br>
+        ETH: ${data.ethereum.usd} USD<br>
+        SOL: ${data.solana.usd} USD`;
+    });
+}
+
+if (localStorage.getItem("auth") === "true") showDashboard();
+  
+  </script>
 </body>
 </html>
