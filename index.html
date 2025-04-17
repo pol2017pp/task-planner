@@ -7,68 +7,74 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <!-- Форма для авторизації -->
-    <div class="login-wrapper hidden" id="loginForm">
-        <div class="login-box">
-            <h2>Авторизація</h2>
-            <input type="text" id="username" placeholder="Введіть ім'я користувача">
-            <input type="password" id="password" placeholder="Введіть пароль">
-            <button onclick="login()">Увійти</button>
-            <div class="error" id="error"></div>
-        </div>
+    <div id="login-form">
+        <h2>Вхід</h2>
+        <input type="text" id="username" placeholder="Логін">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="authorize()">Увійти</button>
     </div>
 
     <!-- Дашборд -->
-    <div id="dashboard" class="dashboard hidden">
-        <header>
-            <h1>Дашборд</h1>
-            <button onclick="logout()">Вихід</button>
-        </header>
-
-        <div class="stats">
-            <div class="card">Задачі на сьогодні: 5</div>
-            <div class="card">Курс USD: 28.5</div>
-            <div class="card">Курс EUR: 33.2</div>
+    <div id="dashboard" style="display:none;">
+        <h1>Добрий день, адміністраторе!</h1>
+        <div>
+            <h2>Сьогоднішні задачі</h2>
+            <ul id="tasks-list">
+                <!-- Завдання будуть додаватися тут через JS -->
+            </ul>
+        </div>
+        <div>
+            <h2>Статистика</h2>
+            <ul>
+                <li>Завдань на сьогодні: <span id="today-tasks-count">0</span></li>
+                <li>Курс USD: <span id="usd-rate">0</span></li>
+                <li>Курс EUR: <span id="eur-rate">0</span></li>
+            </ul>
         </div>
     </div>
 
     <script>
         // Функція для авторизації
-        function login() {
+        function authorize() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
             const storedUsername = "admin";  // Ім'я користувача для авторизації
-            const storedPassword = "password123";  // Пароль для авторизації
+            const storedPassword = "yarik1995";  // Пароль для авторизації
 
+            // Перевірка на правильність логіну та пароля
             if (username === storedUsername && password === storedPassword) {
-                localStorage.setItem("isLoggedIn", true); // Зберігаємо статус входу
-                window.location.reload();  // Перезавантажуємо сторінку для відображення дашборду
+                document.getElementById("login-form").style.display = "none";  // Приховуємо форму авторизації
+                document.getElementById("dashboard").style.display = "block";  // Показуємо дашборд
+
+                // Додаємо завдання на сьогодні
+                const tasks = [
+                    "Завдання 1: Підготовка звіту",
+                    "Завдання 2: Перевірка електронної пошти",
+                    "Завдання 3: Підготовка презентації"
+                ];
+
+                const tasksList = document.getElementById("tasks-list");
+                tasks.forEach(task => {
+                    let li = document.createElement("li");
+                    li.textContent = task;
+                    tasksList.appendChild(li);
+                });
+
+                // Отримуємо курс валют
+                fetch('https://api.exchangerate-api.com/v4/latest/USD')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("usd-rate").textContent = data.rates.UAH;
+                        document.getElementById("eur-rate").textContent = data.rates.UAH;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching currency data:', error);
+                    });
             } else {
-                document.getElementById("error").innerText = "Невірне ім'я користувача або пароль.";
+                alert("Невірний логін або пароль");
             }
         }
-
-        // Перевірка чи користувач увійшов
-        function checkLoginStatus() {
-            if (localStorage.getItem("isLoggedIn") === "true") {
-                document.getElementById("loginForm").classList.add("hidden");
-                document.getElementById("dashboard").classList.remove("hidden");
-            } else {
-                document.getElementById("loginForm").classList.remove("hidden");
-                document.getElementById("dashboard").classList.add("hidden");
-            }
-        }
-
-        // Функція для виходу
-        function logout() {
-            localStorage.removeItem("isLoggedIn");
-            window.location.reload();  // Перезавантажуємо сторінку, щоб вивести форму авторизації
-        }
-
-        // Викликаємо перевірку при завантаженні сторінки
-        checkLoginStatus();
     </script>
-
 </body>
 </html>
