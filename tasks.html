@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Планувальник завдань</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 2rem;
+      color: #212529;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .task-form, .task-list {
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .task-form input,
+    .task-form select,
+    .task-form textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+    }
+
+    .task-form button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .task-form button:hover {
+      background: #0b5ed7;
+    }
+
+    .task {
+      padding: 1rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .task h3 {
+      margin: 0;
+    }
+
+    .task small {
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <h1>Планувальник завдань</h1>
+
+  <div class="task-form">
+    <input type="text" id="title" placeholder="Задача">
+    <input type="text" id="category" placeholder="Проєкт / Категорія">
+    <select id="priority">
+      <option value="">Пріоритет</option>
+      <option value="Низький">Низький</option>
+      <option value="Середній">Середній</option>
+      <option value="Високий">Високий</option>
+    </select>
+    <select id="status">
+      <option value="">Статус</option>
+      <option value="Активна">Активна</option>
+      <option value="Виконана">Виконана</option>
+    </select>
+    <input type="date" id="startDate">
+    <input type="date" id="deadline">
+    <textarea id="note" rows="3" placeholder="Примітка"></textarea>
+    <button onclick="addTask()">Додати задачу</button>
+  </div>
+
+  <div class="task-list" id="taskList">
+    <!-- Tasks will appear here -->
+  </div>
+
+  <script>
+    function addTask() {
+      const title = document.getElementById('title').value;
+      const category = document.getElementById('category').value;
+      const priority = document.getElementById('priority').value;
+      const status = document.getElementById('status').value;
+      const startDate = document.getElementById('startDate').value;
+      const deadline = document.getElementById('deadline').value;
+      const note = document.getElementById('note').value;
+
+      if (!title) return alert("Введіть назву задачі");
+
+      const taskHTML = `
+        <div class="task">
+          <div class="task-header">
+            <h3>${title}</h3>
+            <small>${status || 'Без статусу'}</small>
+          </div>
+          <p><strong>Категорія:</strong> ${category || '-'}</p>
+          <p><strong>Пріоритет:</strong> ${priority || '-'}</p>
+          <p><strong>Початок:</strong> ${startDate || '-'}, <strong>Дедлайн:</strong> ${deadline || '-'}</p>
+          <p>${note}</p>
+        </div>
+      `;
+
+      document.getElementById('taskList').innerHTML += taskHTML;
+
+      document.getElementById('title').value = "";
+      document.getElementById('category').value = "";
+      document.getElementById('priority').value = "";
+      document.getElementById('status').value = "";
+      document.getElementById('startDate').value = "";
+      document.getElementById('deadline').value = "";
+      document.getElementById('note').value = "";
+    }
+  </script>
+</body>
+</html>
