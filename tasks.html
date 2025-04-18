@@ -1,139 +1,194 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <title>Планувальник завдань</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Завдання</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f8f9fa;
+      font-family: Arial, sans-serif;
+      background-color: #f4f5f7;
       margin: 0;
-      padding: 2rem;
-      color: #212529;
+      padding: 20px;
     }
-
     h1 {
-      text-align: center;
-      margin-bottom: 1.5rem;
+      color: #333;
     }
-
-    .task-form, .task-list {
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      background: #ffffff;
-      padding: 1.5rem;
+    .task-board {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
       border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .task-form input,
-    .task-form select,
-    .task-form textarea {
-      width: 100%;
-      padding: 0.6rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ced4da;
-      border-radius: 6px;
-    }
-
-    .task-form button {
-      background: #0d6efd;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .task-form button:hover {
-      background: #0b5ed7;
-    }
-
-    .task {
-      padding: 1rem;
-      border-bottom: 1px solid #dee2e6;
-    }
-
-    .task:last-child {
-      border-bottom: none;
-    }
-
     .task-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
-
-    .task h3 {
-      margin: 0;
+    .task-header button {
+      padding: 10px 15px;
+      background-color: #0079bf;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-
-    .task small {
-      color: #6c757d;
+    .task-header button:hover {
+      background-color: #005f91;
+    }
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .task-table th, .task-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .task-table th {
+      background-color: #e2e4e6;
+    }
+    .actions button {
+      margin-right: 5px;
+      background: #ddd;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .actions button:hover {
+      background-color: #ccc;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .modal-content button {
+      width: 100%;
+      padding: 10px;
+      background: #0079bf;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <h1>Планувальник завдань</h1>
-
-  <div class="task-form">
-    <input type="text" id="title" placeholder="Задача">
-    <input type="text" id="category" placeholder="Проєкт / Категорія">
-    <select id="priority">
-      <option value="">Пріоритет</option>
-      <option value="Низький">Низький</option>
-      <option value="Середній">Середній</option>
-      <option value="Високий">Високий</option>
-    </select>
-    <select id="status">
-      <option value="">Статус</option>
-      <option value="Активна">Активна</option>
-      <option value="Виконана">Виконана</option>
-    </select>
-    <input type="date" id="startDate">
-    <input type="date" id="deadline">
-    <textarea id="note" rows="3" placeholder="Примітка"></textarea>
-    <button onclick="addTask()">Додати задачу</button>
+  <div class="task-board">
+    <div class="task-header">
+      <h1>Завдання</h1>
+      <button onclick="openModal()">Додати завдання</button>
+    </div>
+    <table class="task-table" id="taskTable">
+      <thead>
+        <tr>
+          <th>Назва</th>
+          <th>Опис</th>
+          <th>Дії</th>
+        </tr>
+      </thead>
+      <tbody id="taskList"></tbody>
+    </table>
   </div>
 
-  <div class="task-list" id="taskList">
-    <!-- Tasks will appear here -->
+  <div id="taskModal" class="modal">
+    <div class="modal-content">
+      <h3>Нове завдання</h3>
+      <input type="text" id="taskTitle" placeholder="Назва" />
+      <input type="text" id="taskDescription" placeholder="Опис" />
+      <button onclick="addTask()">Додати</button>
+    </div>
   </div>
 
   <script>
-    function addTask() {
-      const title = document.getElementById('title').value;
-      const category = document.getElementById('category').value;
-      const priority = document.getElementById('priority').value;
-      const status = document.getElementById('status').value;
-      const startDate = document.getElementById('startDate').value;
-      const deadline = document.getElementById('deadline').value;
-      const note = document.getElementById('note').value;
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-      if (!title) return alert("Введіть назву задачі");
-
-      const taskHTML = `
-        <div class="task">
-          <div class="task-header">
-            <h3>${title}</h3>
-            <small>${status || 'Без статусу'}</small>
-          </div>
-          <p><strong>Категорія:</strong> ${category || '-'}</p>
-          <p><strong>Пріоритет:</strong> ${priority || '-'}</p>
-          <p><strong>Початок:</strong> ${startDate || '-'}, <strong>Дедлайн:</strong> ${deadline || '-'}</p>
-          <p>${note}</p>
-        </div>
-      `;
-
-      document.getElementById('taskList').innerHTML += taskHTML;
-
-      document.getElementById('title').value = "";
-      document.getElementById('category').value = "";
-      document.getElementById('priority').value = "";
-      document.getElementById('status').value = "";
-      document.getElementById('startDate').value = "";
-      document.getElementById('deadline').value = "";
-      document.getElementById('note').value = "";
+    function openModal() {
+      document.getElementById('taskModal').style.display = 'block';
     }
+
+    function closeModal() {
+      document.getElementById('taskModal').style.display = 'none';
+      document.getElementById('taskTitle').value = '';
+      document.getElementById('taskDescription').value = '';
+    }
+
+    window.onclick = function(event) {
+      if (event.target == document.getElementById('taskModal')) {
+        closeModal();
+      }
+    }
+
+    function addTask() {
+      const title = document.getElementById('taskTitle').value;
+      const description = document.getElementById('taskDescription').value;
+      if (!title) return;
+      tasks.push({ title, description });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+      closeModal();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const row = `<tr>
+          <td>${task.title}</td>
+          <td>${task.description}</td>
+          <td class="actions">
+            <button onclick="editTask(${index})">Редагувати</button>
+            <button onclick="deleteTask(${index})">Видалити</button>
+          </td>
+        </tr>`;
+        taskList.innerHTML += row;
+      });
+    }
+
+    function editTask(index) {
+      const task = tasks[index];
+      document.getElementById('taskTitle').value = task.title;
+      document.getElementById('taskDescription').value = task.description;
+      document.getElementById('taskModal').style.display = 'block';
+      document.querySelector('.modal-content button').onclick = function () {
+        tasks[index].title = document.getElementById('taskTitle').value;
+        tasks[index].description = document.getElementById('taskDescription').value;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+        closeModal();
+        document.querySelector('.modal-content button').onclick = addTask;
+      };
+    }
+
+    renderTasks();
   </script>
 </body>
 </html>
